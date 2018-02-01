@@ -12,7 +12,7 @@ import (
 	"database/sql"
 	"bytes"
 	"strconv"
-	"github.com/liuyongshuai/goElemItem"
+	"github.com/liuyongshuai/goutils/elem"
 )
 
 //存储MySQL的连接账号信息
@@ -151,7 +151,7 @@ func checkSQLToken(t string) bool {
  * 仅用在预编译的查询语句中
  * 格式化要查询的条件语句，只支持简单语句
  */
-func FormatCond(cond map[string]goElemItem.ItemElem, delim string) (sqlCond string, param []goElemItem.ItemElem) {
+func FormatCond(cond map[string]elem.ItemElem, delim string) (sqlCond string, param []elem.ItemElem) {
 	if !checkDelimiter(delim) {
 		return sqlCond, param
 	}
@@ -175,14 +175,14 @@ func FormatCond(cond map[string]goElemItem.ItemElem, delim string) (sqlCond stri
 		//如果字段符号是in/notin,允许的值有string/slice/map
 		vlen, verr := v.Len()
 		if tmpSym == "in" || tmpSym == "notin" {
-			var vslice []goElemItem.ItemElem
+			var vslice []elem.ItemElem
 			if v.IsString() && vlen > 0 { //如果是字符串则用"，"切成slice
 				tmp := strings.Split(v.ToString(), ",")
 				for _, t := range tmp {
 					if len(t) <= 0 {
 						continue
 					}
-					vslice = append(vslice, goElemItem.MakeItemElem(t))
+					vslice = append(vslice, elem.MakeItemElem(t))
 				}
 
 			} else if v.IsSimpleType() { //其他的简单类型，直接填上去即可
@@ -222,7 +222,7 @@ func FormatCond(cond map[string]goElemItem.ItemElem, delim string) (sqlCond stri
 			case "like":
 				likeV = "%" + likeV + "%" //双边like，前后都加
 			}
-			param = append(param, goElemItem.MakeItemElem(likeV))
+			param = append(param, elem.MakeItemElem(likeV))
 			cd := fmt.Sprintf("`%s` %s ?", key, tmpToken)
 			tmpCond = append(tmpCond, cd)
 			continue
@@ -256,7 +256,7 @@ func FormatCond(cond map[string]goElemItem.ItemElem, delim string) (sqlCond stri
 }
 
 //转换查询SQL用的参数
-func convertArgs(param []goElemItem.ItemElem) []interface{} {
+func convertArgs(param []elem.ItemElem) []interface{} {
 	args := make([]interface{}, len(param))
 	for i := range param {
 		args[i] = param[i].RawData()

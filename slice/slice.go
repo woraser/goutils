@@ -8,6 +8,7 @@ package slice
 import (
 	"math/rand"
 	"reflect"
+	"github.com/liuyongshuai/goutils/elem"
 )
 
 type reduceCallbackFunc func(interface{}) interface{}
@@ -78,7 +79,7 @@ func SliceRand(a []interface{}) (b interface{}) {
 //计算int64型slice的和
 func SliceSum(slice []interface{}) (sum int64) {
 	for _, v := range slice {
-		vi, _ := MakeItemElem(v).ToInt64()
+		vi, _ := elem.MakeItemElem(v).ToInt64()
 		sum += vi
 	}
 	return

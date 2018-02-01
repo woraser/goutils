@@ -9,7 +9,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	gItem "github.com/liuyongshuai/goElemItem"
+	gItem "github.com/liuyongshuai/goutils/elem"
 	"strconv"
 )
 

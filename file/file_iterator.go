@@ -11,6 +11,7 @@ import (
 	"bytes"
 	"bufio"
 	"sync"
+	"github.com/liuyongshuai/goutils/helper"
 )
 
 type fileIterator struct {
@@ -61,7 +62,7 @@ func (fi *fileIterator) Init() (*fileIterator, error) {
 		fi.fp.Close()
 	}
 	fi.ch = make(chan string, fi.chSize)
-	if !FileExists(fi.file) {
+	if !helper.FileExists(fi.file) {
 		return nil, fmt.Errorf("file not exist,%s", fi.file)
 	}
 	fp, err := os.Open(fi.file)
