@@ -7,33 +7,35 @@ package tofuutils
 
 import (
 	"sync"
+	"github.com/liuyongshuai/goutils/elem"
+	"fmt"
 )
 
 type SafeMap struct {
 	lock *sync.RWMutex
-	data   map[ItemElem]ItemElem
+	data map[elem.ItemElem]elem.ItemElem
 }
 
 //获取实例
 func NewSafeMap() *SafeMap {
 	return &SafeMap{
 		lock: new(sync.RWMutex),
-		data:   make(map[ItemElem]ItemElem),
+		data: make(map[elem.ItemElem]elem.ItemElem),
 	}
 }
 
 //提取值
-func (m *SafeMap) Get(k ItemElem) ItemElem {
+func (m *SafeMap) Get(k elem.ItemElem) (elem.ItemElem, error) {
 	m.lock.RLock()
 	defer m.lock.RUnlock()
 	if val, ok := m.data[k]; ok {
-		return val
+		return val, nil
 	}
-	return ItemElem{}
+	return elem.ItemElem{}, fmt.Errorf("not exists")
 }
 
 //设置值
-func (m *SafeMap) Set(k ItemElem, v ItemElem) bool {
+func (m *SafeMap) Set(k elem.ItemElem, v elem.ItemElem) bool {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 	if val, ok := m.data[k]; !ok {
@@ -47,7 +49,7 @@ func (m *SafeMap) Set(k ItemElem, v ItemElem) bool {
 }
 
 //检查是否存在
-func (m *SafeMap) Check(k ItemElem) bool {
+func (m *SafeMap) Check(k elem.ItemElem) bool {
 	m.lock.RLock()
 	defer m.lock.RUnlock()
 	_, ok := m.data[k]
@@ -55,17 +57,17 @@ func (m *SafeMap) Check(k ItemElem) bool {
 }
 
 //干掉一个值
-func (m *SafeMap) Delete(k ItemElem) {
+func (m *SafeMap) Delete(k elem.ItemElem) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 	delete(m.data, k)
 }
 
 //返回所有的值
-func (m *SafeMap) Items() map[ItemElem]ItemElem {
+func (m *SafeMap) Items() map[elem.ItemElem]elem.ItemElem {
 	m.lock.RLock()
 	defer m.lock.RUnlock()
-	r := make(map[ItemElem]ItemElem)
+	r := make(map[elem.ItemElem]elem.ItemElem)
 	for k, v := range m.data {
 		r[k] = v
 	}
