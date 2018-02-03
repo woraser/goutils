@@ -256,7 +256,7 @@ func FormatCond(cond map[string]elem.ItemElem, delim string) (sqlCond string, pa
 }
 
 //转换查询SQL用的参数
-func convertArgs(param []elem.ItemElem) []interface{} {
+func ConvertArgs(param []elem.ItemElem) []interface{} {
 	args := make([]interface{}, len(param))
 	for i := range param {
 		args[i] = param[i].RawData()

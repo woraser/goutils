@@ -187,7 +187,7 @@ func (my *DBase) FetchCondRows(table string, cond map[string]gItem.ItemElem, fie
 	f := filterTableFields(fields...)
 	cd, param := FormatCond(cond, "AND")
 	fsql := fmt.Sprintf("SELECT %s FROM `%s`", f, table)
-	execArgs := convertArgs(param)
+	execArgs := ConvertArgs(param)
 	if len(cd) > 0 {
 		fsql = fmt.Sprintf("%s WHERE %s", fsql, cd)
 	}
@@ -211,7 +211,7 @@ func (my *DBase) Execute(sql string, args ...interface{}) (int64, bool, error) {
 func (my *DBase) DeleteData(table string, cond map[string]gItem.ItemElem) (int64, bool, error) {
 	cd, param := FormatCond(cond, "AND")
 	dsql := fmt.Sprintf("DELETE FROM `%s`", table)
-	execArg := convertArgs(param)
+	execArg := ConvertArgs(param)
 	if len(cd) > 0 {
 		dsql = fmt.Sprintf("%s WHERE %s", dsql, cd)
 	}
@@ -228,7 +228,7 @@ func (my *DBase) InsertData(table string, data map[string]gItem.ItemElem, isIgno
 	if len(cd) == 0 {
 		return 0, false, fmt.Errorf("invalid insert data")
 	}
-	execArgs := convertArgs(param)
+	execArgs := ConvertArgs(param)
 	isql := fmt.Sprintf("INSERT %s INTO `%s` SET %s", ignore, table, cd)
 	ret, err := my.doExec(isql, execArgs...)
 	if err != nil {
@@ -249,7 +249,7 @@ func (my *DBase) InsertUpdateData(table string, insert map[string]gItem.ItemElem
 		return 0, false, fmt.Errorf("invalid insert/update data")
 	}
 	iparam = append(iparam, uparam...)
-	execArgs := convertArgs(iparam)
+	execArgs := ConvertArgs(iparam)
 	iusql := fmt.Sprintf("INSERT INTO `%s` SET %s ON DUPLICATE KEY UPDATE %s", table, icd, ucd)
 	return my.Execute(iusql, execArgs...)
 }
@@ -266,14 +266,14 @@ func (my *DBase) UpdateData(table string, data map[string]gItem.ItemElem, cond m
 		usql = fmt.Sprintf("%s WHERE %s", usql, ccd)
 		dparam = append(dparam, cparam...)
 	}
-	execArgs := convertArgs(dparam)
+	execArgs := ConvertArgs(dparam)
 	return my.Execute(usql, execArgs...)
 }
 
 //执行一条select ... for update语句
 func (my *DBase) FetchForUpdate(table string, cond map[string]gItem.ItemElem) (map[string]gItem.ItemElem, error) {
 	cd, param := FormatCond(cond, "AND")
-	execArgs := convertArgs(param)
+	execArgs := ConvertArgs(param)
 	fusql := fmt.Sprintf("SELECT * FROM `%s`", table)
 	if len(cd) > 0 {
 		fusql = fmt.Sprintf("%s WHERE %s", fusql, cd)

@@ -29,5 +29,5 @@ func TestFormatCond(t *testing.T) {
 	param {}{"444","666","888",int(400),"google","99999",int(444),"%liuyongshuai%",}
 	 */
 	fmt.Printf("sqlCond %# v\n", pretty.Formatter(sqlCond))
-	fmt.Printf("param %# v\n", pretty.Formatter(convertArgs(param)))
+	fmt.Printf("param %# v\n", pretty.Formatter(ConvertArgs(param)))
 }
