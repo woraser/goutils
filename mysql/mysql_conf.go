@@ -151,15 +151,19 @@ func checkSQLToken(t string) bool {
  * 仅用在预编译的查询语句中
  * 格式化要查询的条件语句，只支持简单语句
  */
-func FormatCond(cond map[string]elem.ItemElem, delim string) (sqlCond string, param []elem.ItemElem) {
+func FormatCond(cond map[string]interface{}, delim string) (sqlCond string, param []interface{}) {
 	if !checkDelimiter(delim) {
 		return sqlCond, param
 	}
 	delim = strings.ToUpper(delim)
 	var tmpCond []string
+	var condItem = make(map[string]elem.ItemElem)
+	for k, v := range cond {
+		condItem[k] = elem.MakeItemElem(v)
+	}
 
 	//遍历所有的查询条件,k为字段名，v为相应的值
-	for k, v := range cond {
+	for k, v := range condItem {
 		tmpToken := "="
 		tmpSym := "="
 		key := k
@@ -197,7 +201,7 @@ func FormatCond(cond map[string]elem.ItemElem, delim string) (sqlCond string, pa
 			if vsliceLen <= 0 {
 				continue
 			}
-			param = append(param, vslice...)
+			param = append(param, ConvertArgs(vslice)...)
 			//用问号填充查询字段的值
 			var tmpQ []string
 			for i := 0; i < vsliceLen; i++ {
@@ -222,7 +226,7 @@ func FormatCond(cond map[string]elem.ItemElem, delim string) (sqlCond string, pa
 			case "like":
 				likeV = "%" + likeV + "%" //双边like，前后都加
 			}
-			param = append(param, elem.MakeItemElem(likeV))
+			param = append(param, likeV)
 			cd := fmt.Sprintf("`%s` %s ?", key, tmpToken)
 			tmpCond = append(tmpCond, cd)
 			continue
@@ -230,7 +234,7 @@ func FormatCond(cond map[string]elem.ItemElem, delim string) (sqlCond string, pa
 		if tmpSym == "is" && vlen > 0 && verr == nil {
 			cd := fmt.Sprintf("`%s` %s ?", key, tmpToken)
 			tmpCond = append(tmpCond, cd)
-			param = append(param, v)
+			param = append(param, v.RawData())
 			continue
 		}
 		//对于find_in_set来说，只允许简单类型
@@ -240,14 +244,14 @@ func FormatCond(cond map[string]elem.ItemElem, delim string) (sqlCond string, pa
 			}
 			cd := fmt.Sprintf("%s(?,`%s`)", tmpToken, key)
 			tmpCond = append(tmpCond, cd)
-			param = append(param, v)
+			param = append(param, v.RawData())
 			continue
 		}
 		//其余的全部要求只能是简单类型
 		if v.IsSimpleType() {
 			cd := fmt.Sprintf("`%s` %s ?", key, tmpToken)
 			tmpCond = append(tmpCond, cd)
-			param = append(param, v)
+			param = append(param, v.RawData())
 			continue
 		}
 	}

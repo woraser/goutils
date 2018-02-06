@@ -11,6 +11,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	gItem "github.com/liuyongshuai/goutils/elem"
 	"strconv"
+	"strings"
 )
 
 //MySQL连接的类
@@ -183,15 +184,14 @@ func (my *DBase) FetchRows(sql string, args ...interface{}) ([]map[string]gItem.
 //table为表名
 //cond为查询条件，全为and
 //fields为要查询的字段，为空时表示查询全部
-func (my *DBase) FetchCondRows(table string, cond map[string]gItem.ItemElem, fields ...string) (ret []map[string]gItem.ItemElem, err error) {
+func (my *DBase) FetchCondRows(table string, cond map[string]interface{}, fields ...string) (ret []map[string]gItem.ItemElem, err error) {
 	f := filterTableFields(fields...)
 	cd, param := FormatCond(cond, "AND")
 	fsql := fmt.Sprintf("SELECT %s FROM `%s`", f, table)
-	execArgs := ConvertArgs(param)
 	if len(cd) > 0 {
 		fsql = fmt.Sprintf("%s WHERE %s", fsql, cd)
 	}
-	return my.FetchRows(fsql, execArgs...)
+	return my.FetchRows(fsql, param...)
 }
 
 //执行一条insert/update/delete语句，返回影响行数
@@ -208,18 +208,17 @@ func (my *DBase) Execute(sql string, args ...interface{}) (int64, bool, error) {
 }
 
 //删除一条数据，返回lastAffectedRows
-func (my *DBase) DeleteData(table string, cond map[string]gItem.ItemElem) (int64, bool, error) {
+func (my *DBase) DeleteData(table string, cond map[string]interface{}) (int64, bool, error) {
 	cd, param := FormatCond(cond, "AND")
 	dsql := fmt.Sprintf("DELETE FROM `%s`", table)
-	execArg := ConvertArgs(param)
 	if len(cd) > 0 {
 		dsql = fmt.Sprintf("%s WHERE %s", dsql, cd)
 	}
-	return my.Execute(dsql, execArg...)
+	return my.Execute(dsql, param...)
 }
 
 //写入一条数据，返回lastInsertId
-func (my *DBase) InsertData(table string, data map[string]gItem.ItemElem, isIgnore bool) (int64, bool, error) {
+func (my *DBase) InsertData(table string, data map[string]interface{}, isIgnore bool) (int64, bool, error) {
 	ignore := "IGNORE"
 	if !isIgnore {
 		ignore = ""
@@ -228,9 +227,8 @@ func (my *DBase) InsertData(table string, data map[string]gItem.ItemElem, isIgno
 	if len(cd) == 0 {
 		return 0, false, fmt.Errorf("invalid insert data")
 	}
-	execArgs := ConvertArgs(param)
 	isql := fmt.Sprintf("INSERT %s INTO `%s` SET %s", ignore, table, cd)
-	ret, err := my.doExec(isql, execArgs...)
+	ret, err := my.doExec(isql, param...)
 	if err != nil {
 		return 0, false, err
 	}
@@ -241,21 +239,64 @@ func (my *DBase) InsertData(table string, data map[string]gItem.ItemElem, isIgno
 	return lastInsertId, true, nil
 }
 
+//批量写入数据，返回影响行数
+func (my *DBase) InsertBatchData(table string, fields []string, data [][]interface{}, isIgnore bool) (int64, bool, error) {
+	fieldsLen := len(fields)
+	if fieldsLen <= 0 {
+		return 0, false, fmt.Errorf("invalid fields")
+	}
+	for _, d := range data {
+		if fieldsLen != len(d) {
+			return 0, false, fmt.Errorf("invalid data,count(fields) != count(data)")
+		}
+	}
+
+	ignore := "IGNORE"
+	if !isIgnore {
+		ignore = ""
+	}
+	var args []interface{}
+	isql := fmt.Sprintf("INSERT %s INTO `%s` (`%s`) VALUES ", ignore, table, strings.Join(fields, "`,`"))
+	var tmp []string
+	var tmpArg []string
+	for i := 0; i < len(fields); i++ {
+		tmp = append(tmp, "?")
+	}
+	tmpStr := fmt.Sprintf("(%s)", strings.Join(tmp, ","))
+	for i := 0; i < len(data); i++ {
+		tmpArg = append(tmpArg, tmpStr)
+	}
+	isql = fmt.Sprintf("%s %s", isql, strings.Join(tmpArg, ","))
+	for _, dinfo := range data {
+		for _, d := range dinfo {
+			args = append(args, d)
+		}
+	}
+	ret, err := my.doExec(isql, args...)
+	if err != nil {
+		return 0, false, err
+	}
+	rowsAffected, err := ret.RowsAffected()
+	if err != nil {
+		return 0, false, err
+	}
+	return rowsAffected, true, nil
+}
+
 //执行一条：INSERT INTO table (a,b,c) VALUES (1,2,3) ON DUPLICATE KEY UPDATE c=c+1 语句
-func (my *DBase) InsertUpdateData(table string, insert map[string]gItem.ItemElem, update map[string]gItem.ItemElem) (int64, bool, error) {
+func (my *DBase) InsertUpdateData(table string, insert map[string]interface{}, update map[string]interface{}) (int64, bool, error) {
 	icd, iparam := FormatCond(insert, ",")
 	ucd, uparam := FormatCond(update, ",")
 	if len(icd) == 0 || len(ucd) == 0 {
 		return 0, false, fmt.Errorf("invalid insert/update data")
 	}
 	iparam = append(iparam, uparam...)
-	execArgs := ConvertArgs(iparam)
 	iusql := fmt.Sprintf("INSERT INTO `%s` SET %s ON DUPLICATE KEY UPDATE %s", table, icd, ucd)
-	return my.Execute(iusql, execArgs...)
+	return my.Execute(iusql, iparam...)
 }
 
 //更新一条数据，返回lastAffectedRows
-func (my *DBase) UpdateData(table string, data map[string]gItem.ItemElem, cond map[string]gItem.ItemElem) (int64, bool, error) {
+func (my *DBase) UpdateData(table string, data map[string]interface{}, cond map[string]interface{}) (int64, bool, error) {
 	dcd, dparam := FormatCond(data, ",")
 	ccd, cparam := FormatCond(cond, "AND")
 	if len(dcd) == 0 {
@@ -266,20 +307,18 @@ func (my *DBase) UpdateData(table string, data map[string]gItem.ItemElem, cond m
 		usql = fmt.Sprintf("%s WHERE %s", usql, ccd)
 		dparam = append(dparam, cparam...)
 	}
-	execArgs := ConvertArgs(dparam)
-	return my.Execute(usql, execArgs...)
+	return my.Execute(usql, dparam...)
 }
 
 //执行一条select ... for update语句
-func (my *DBase) FetchForUpdate(table string, cond map[string]gItem.ItemElem) (map[string]gItem.ItemElem, error) {
+func (my *DBase) FetchForUpdate(table string, cond map[string]interface{}) (map[string]gItem.ItemElem, error) {
 	cd, param := FormatCond(cond, "AND")
-	execArgs := ConvertArgs(param)
 	fusql := fmt.Sprintf("SELECT * FROM `%s`", table)
 	if len(cd) > 0 {
 		fusql = fmt.Sprintf("%s WHERE %s", fusql, cd)
 	}
 	fusql = fmt.Sprintf("%s FOR UPDATE", fusql)
-	return my.FetchRow(fusql, execArgs...)
+	return my.FetchRow(fusql, param...)
 }
 
 //执行一条写语句
