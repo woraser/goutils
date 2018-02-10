@@ -167,6 +167,7 @@ func (my *DBase) FetchRows(sql string, args ...interface{}) ([]map[string]gItem.
 	if my.IsDebug {
 		fmt.Printf("doFetch:\n")
 		fmt.Printf("\tSQL:%s\n", sql)
+		fmt.Println("args:\t", args)
 	}
 	stmt, err := my.Db.Prepare(sql)
 	if err != nil {
@@ -329,6 +330,7 @@ func (my *DBase) doExec(sql string, args ...interface{}) (sql.Result, error) {
 	if my.IsDebug {
 		fmt.Printf("\ndoExec:\n")
 		fmt.Printf("\tSQL:%s\n", sql)
+		fmt.Println("args:\t", args)
 	}
 	stmt, err := my.Db.Prepare(sql)
 	if err != nil {
