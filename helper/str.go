@@ -9,6 +9,8 @@ import (
 	"crypto/rand"
 	r "math/rand"
 	"time"
+	"crypto/md5"
+	"fmt"
 )
 
 var alphaNum = []byte(`0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`)
@@ -56,4 +58,11 @@ func Substr(str string, start int, end int) string {
 		return ""
 	}
 	return string(rs[start:end])
+}
+
+//md5转换
+func MD5(str string) string {
+	data := []byte(str)
+	has := md5.Sum(data)
+	return fmt.Sprintf("%x", has)
 }
