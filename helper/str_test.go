@@ -23,3 +23,10 @@ func TestRandomStr(t *testing.T) {
 	fmt.Println(RandomStr(5))  //hHnZV
 	fmt.Println(RandomStr(10)) //3X4gPDCu2y
 }
+
+func TestBase62(t *testing.T) {
+	i := 349879
+	b62 := Base62Encode(i)
+	fmt.Println(b62)
+	fmt.Println(Base62Decode(b62))
+}

@@ -11,7 +11,15 @@ import (
 	"time"
 	"crypto/md5"
 	"fmt"
+	"math"
 )
+
+func init() {
+	//base62转码初始化
+	for k, v := range base62CharToInt {
+		base62IntToChar[v] = k
+	}
+}
 
 var alphaNum = []byte(`0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`)
 
@@ -65,4 +73,35 @@ func MD5(str string) string {
 	data := []byte(str)
 	has := md5.Sum(data)
 	return fmt.Sprintf("%x", has)
+}
+
+var base62CharToInt = []string{
+	"0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+	"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m",
+	"n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
+	"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
+	"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
+var base62IntToChar = make(map[string]int)
+
+//base62转换
+func Base62Encode(num int) string {
+	baseStr := ""
+	for {
+		if num <= 0 {
+			break
+		}
+		i := num % 62
+		baseStr += base62CharToInt[i]
+		num = (num - i) / 62
+	}
+	return baseStr
+}
+
+//base62解码
+func Base62Decode(b62Str string) int {
+	rs := 0
+	for i := 0; i < len(b62Str); i++ {
+		rs += base62IntToChar[string(b62Str[i])] * int(math.Pow(62, float64(i)))
+	}
+	return rs
 }
