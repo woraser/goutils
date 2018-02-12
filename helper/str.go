@@ -84,7 +84,7 @@ var base62CharToInt = []string{
 var base62IntToChar = make(map[string]int)
 
 //base62转换
-func Base62Encode(num int) string {
+func Base62Encode(num int64) string {
 	baseStr := ""
 	for {
 		if num <= 0 {
@@ -98,10 +98,10 @@ func Base62Encode(num int) string {
 }
 
 //base62解码
-func Base62Decode(b62Str string) int {
-	rs := 0
+func Base62Decode(b62Str string) int64 {
+	var rs int64 = 0
 	for i := 0; i < len(b62Str); i++ {
-		rs += base62IntToChar[string(b62Str[i])] * int(math.Pow(62, float64(i)))
+		rs += int64(base62IntToChar[string(b62Str[i])]) * int64(math.Pow(62, float64(i)))
 	}
 	return rs
 }

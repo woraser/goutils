@@ -25,7 +25,7 @@ func TestRandomStr(t *testing.T) {
 }
 
 func TestBase62(t *testing.T) {
-	i := 349879
+	var i int64 = 349879
 	b62 := Base62Encode(i)
 	fmt.Println(b62)
 	fmt.Println(Base62Decode(b62))
