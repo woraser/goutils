@@ -79,7 +79,7 @@ func (fi *fileIterator) Init() (*fileIterator, error) {
 //返回一个可遍历的通道
 func (fi *fileIterator) IterLine(fn IteratorLineFunc) {
 	if !fi.isHaveInit {
-		fmt.Errorf("please execute Init() first")
+		fmt.Errorf("please execute Init() first\n")
 		return
 	}
 	for line := range fi.ch {
@@ -90,7 +90,7 @@ func (fi *fileIterator) IterLine(fn IteratorLineFunc) {
 //读每行数据
 func (fi *fileIterator) readline() {
 	if !fi.isHaveInit {
-		fmt.Errorf("please execute Init() first")
+		fmt.Errorf("please execute Init() first\n")
 		return
 	}
 	var buf bytes.Buffer
@@ -104,7 +104,7 @@ func (fi *fileIterator) readline() {
 			}
 		}
 		if err != nil {
-			fmt.Printf("error\t%v", err)
+			fmt.Printf("read file occur error\t%v\n", err)
 			break
 		}
 	}
