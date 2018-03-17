@@ -209,7 +209,8 @@ func (httpReq *ToFuHttp) Get() (ToFuResponse, error) {
 func (httpReq *ToFuHttp) PostBin() (ToFuResponse, error) {
 	httpReq.request.Method = http.MethodPost
 	u := httpReq.request.URL.String()
-	response, err := httpReq.client.PostForm(u, httpReq.vals)
+	d := httpReq.vals.Encode()
+	response, err := httpReq.client.Post(u, "", strings.NewReader(d))
 	if err != nil {
 		fmt.Println(err)
 		return ToFuResponse{}, err
