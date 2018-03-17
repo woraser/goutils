@@ -182,7 +182,10 @@ func (httpReq *ToFuHttp) AddFields(data map[string]string) *ToFuHttp {
 
 //添加单个字段
 func (httpReq *ToFuHttp) AddField(k, v string) *ToFuHttp {
-	httpReq.writer.WriteField(k, v)
+	err := httpReq.writer.WriteField(k, v)
+	if err != nil {
+		fmt.Println(err)
+	}
 	return httpReq
 }
 
@@ -207,15 +210,16 @@ func (httpReq *ToFuHttp) Get() (ToFuResponse, error) {
 func (httpReq *ToFuHttp) Post() (ToFuResponse, error) {
 	httpReq.request.Method = http.MethodPost
 	httpReq.writer.Close()
+	defer httpReq.buf.Reset()
 	//拼装请求的body
 	response, err := httpReq.client.Post(
 		httpReq.request.URL.String(),
 		httpReq.writer.FormDataContentType(),
 		httpReq.buf)
 	if err != nil {
+		fmt.Println(err)
 		return ToFuResponse{}, err
 	}
-	defer httpReq.buf.Reset()
 	return processResponse(response)
 }
 
