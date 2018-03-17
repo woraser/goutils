@@ -22,6 +22,7 @@ import (
 //客户端结构体
 type ToFuHttp struct {
 	buf     *bytes.Buffer     //发送的数据，一般POST用
+	vals    url.Values        //提交上来的数据
 	writer  *multipart.Writer //POST/PUT时的写入数据
 	client  *http.Client      //连接客户端
 	request *http.Request     //要发送的请求
@@ -32,6 +33,7 @@ func NewHttpClient() *ToFuHttp {
 	b := new(bytes.Buffer)
 	httpReq := &ToFuHttp{
 		buf:    b,
+		vals:   make(url.Values),
 		writer: multipart.NewWriter(b),
 	}
 	transport := http.Transport{
@@ -174,7 +176,7 @@ func (httpReq *ToFuHttp) SetProxy(proxyHost string) *ToFuHttp {
 func (httpReq *ToFuHttp) AddFields(data map[string]string) *ToFuHttp {
 	if len(data) > 0 {
 		for k, v := range data {
-			httpReq.writer.WriteField(k, v)
+			httpReq.vals.Set(k, v)
 		}
 	}
 	return httpReq
@@ -182,10 +184,7 @@ func (httpReq *ToFuHttp) AddFields(data map[string]string) *ToFuHttp {
 
 //添加单个字段
 func (httpReq *ToFuHttp) AddField(k, v string) *ToFuHttp {
-	err := httpReq.writer.WriteField(k, v)
-	if err != nil {
-		fmt.Println(err)
-	}
+	httpReq.vals.Set(k, v)
 	return httpReq
 }
 
@@ -207,8 +206,26 @@ func (httpReq *ToFuHttp) Get() (ToFuResponse, error) {
 }
 
 //发起POST请求并返回数据
+func (httpReq *ToFuHttp) PostBin() (ToFuResponse, error) {
+	httpReq.request.Method = http.MethodPost
+	u := httpReq.request.URL.String()
+	response, err := httpReq.client.PostForm(u, httpReq.vals)
+	if err != nil {
+		fmt.Println(err)
+		return ToFuResponse{}, err
+	}
+	return processResponse(response)
+}
+
+//发起POST请求并返回数据
 func (httpReq *ToFuHttp) Post() (ToFuResponse, error) {
 	httpReq.request.Method = http.MethodPost
+	for k, vs := range httpReq.vals {
+		if len(vs) <= 0 {
+			continue
+		}
+		httpReq.writer.WriteField(k, vs[0])
+	}
 	httpReq.writer.Close()
 	defer httpReq.buf.Reset()
 	//拼装请求的body
@@ -216,7 +233,6 @@ func (httpReq *ToFuHttp) Post() (ToFuResponse, error) {
 	bf := httpReq.buf
 	u := httpReq.request.URL.String()
 	response, err := httpReq.client.Post(u, ct, bf)
-	fmt.Println(ct, bf)
 	if err != nil {
 		fmt.Println(err)
 		return ToFuResponse{}, err
