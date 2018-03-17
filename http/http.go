@@ -212,10 +212,10 @@ func (httpReq *ToFuHttp) Post() (ToFuResponse, error) {
 	httpReq.writer.Close()
 	defer httpReq.buf.Reset()
 	//拼装请求的body
-	response, err := httpReq.client.Post(
-		httpReq.request.URL.String(),
-		httpReq.writer.FormDataContentType(),
-		httpReq.buf)
+	contentType := httpReq.writer.FormDataContentType()
+	buf := httpReq.buf
+	response, err := httpReq.client.Post(httpReq.request.URL.String(), contentType, buf)
+	fmt.Println(contentType, buf)
 	if err != nil {
 		fmt.Println(err)
 		return ToFuResponse{}, err
