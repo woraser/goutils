@@ -6,11 +6,11 @@
 package elem
 
 import (
-	"reflect"
-	"math"
-	"fmt"
-	"strconv"
 	"encoding/json"
+	"fmt"
+	"math"
+	"reflect"
+	"strconv"
 )
 
 func MakeItemElem(d interface{}) ItemElem {

@@ -6,12 +6,12 @@
 package helper
 
 import (
-	"crypto/rand"
-	r "math/rand"
-	"time"
 	"crypto/md5"
+	"crypto/rand"
 	"fmt"
 	"math"
+	r "math/rand"
+	"time"
 )
 
 func init() {
@@ -104,4 +104,36 @@ func Base62Decode(b62Str string) int64 {
 		rs += int64(base62IntToChar[string(b62Str[i])]) * int64(math.Pow(62, float64(i)))
 	}
 	return rs
+}
+
+//半角字符转全角字符
+func ToDBC(str string) string {
+	ret := ""
+	for _, rs := range str {
+		if rs == 32 {
+			ret += string(12288)
+		} else if rs < 127 {
+			ret += string(rs + 65248)
+		} else {
+			ret += string(rs)
+		}
+	}
+	return ret
+}
+
+//全角字符转半角字符
+func ToCBD(str string) string {
+	ret := ""
+	for _, rs := range str {
+		if rs == 12288 {
+			ret += string(rs - 12256)
+			continue
+		}
+		if rs > 65280 && rs < 65375 {
+			ret += string(rs - 65248)
+		} else {
+			ret += string(rs)
+		}
+	}
+	return ret
 }

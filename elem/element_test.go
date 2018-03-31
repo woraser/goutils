@@ -1,12 +1,12 @@
 package elem
 
 import (
-	"testing"
-	"github.com/kr/pretty"
-	"fmt"
-	"runtime"
-	"encoding/binary"
 	"bytes"
+	"encoding/binary"
+	"fmt"
+	"github.com/kr/pretty"
+	"runtime"
+	"testing"
 )
 
 func TestNewItemElem(t *testing.T) {
@@ -62,8 +62,6 @@ func TestNewItemElem(t *testing.T) {
 		toMap, err := elem.ToMap()
 		fmt.Printf("--toMap%# v\n\t%# v\n", pretty.Formatter(convMap(toMap)), err)
 	}
-
-
 
 }
 

@@ -1,10 +1,10 @@
 package snowflake
 
 import (
-	"testing"
 	"fmt"
-	"time"
 	"os"
+	"testing"
+	"time"
 )
 
 func TestNewIDGenerator(t *testing.T) {

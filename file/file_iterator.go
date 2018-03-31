@@ -6,12 +6,12 @@
 package file
 
 import (
-	"fmt"
-	"os"
-	"bytes"
 	"bufio"
-	"sync"
+	"bytes"
+	"fmt"
 	"github.com/liuyongshuai/goutils/helper"
+	"os"
+	"sync"
 )
 
 type fileIterator struct {

@@ -7,8 +7,8 @@ package color
 
 import (
 	"fmt"
-	"strings"
 	"reflect"
+	"strings"
 )
 
 //绿色字体，modifier里，第一个控制闪烁，第二个控制下划线

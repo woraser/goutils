@@ -6,9 +6,9 @@
 package slice
 
 import (
+	"github.com/liuyongshuai/goutils/elem"
 	"math/rand"
 	"reflect"
-	"github.com/liuyongshuai/goutils/elem"
 )
 
 type reduceCallbackFunc func(interface{}) interface{}

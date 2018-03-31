@@ -1,9 +1,9 @@
 package mysql
 
 import (
-	"testing"
 	"fmt"
 	"runtime"
+	"testing"
 )
 
 func TestDBase_Conn(t *testing.T) {

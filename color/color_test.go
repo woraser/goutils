@@ -1,8 +1,8 @@
 package color
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 func TestCliColor(t *testing.T) {

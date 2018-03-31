@@ -1,8 +1,8 @@
 package http
 
 import (
-	"testing"
 	"fmt"
+	"testing"
 )
 
 var testUrl = "https://www.baidu.com/s?wd=golang%20openfile&pn=610&oq=golang%20openfile&ie=utf-8&rsv_idx=1&rsv_pq=9535c6380000b84b&rsv_t=e7eaF5wQgnDd0ZUG50OodOQsa8zV%2BW5LFT%2FZ0Mt3vt00Lt6DHSEcBW7wsp0"

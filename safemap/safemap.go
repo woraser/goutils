@@ -6,9 +6,9 @@
 package safemap
 
 import (
-	"sync"
-	"github.com/liuyongshuai/goutils/elem"
 	"fmt"
+	"github.com/liuyongshuai/goutils/elem"
+	"sync"
 )
 
 type SafeMap struct {

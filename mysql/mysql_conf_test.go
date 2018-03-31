@@ -1,10 +1,10 @@
 package mysql
 
 import (
-	"testing"
-	"github.com/kr/pretty"
 	"fmt"
+	"github.com/kr/pretty"
 	"runtime"
+	"testing"
 )
 
 func TestFormatCond(t *testing.T) {
@@ -26,7 +26,7 @@ func TestFormatCond(t *testing.T) {
 	/**
 	sqlCond "`id` IN (?,?,?) AND `tid` < ? AND FIND_IN_SET(?,`tags`) AND `cnum` = ? AND `uid` IN (?) AND `name` LIKE ?"
 	param {}{"444","666","888",int(400),"google","99999",int(444),"%liuyongshuai%",}
-	 */
+	*/
 	fmt.Printf("sqlCond %# v\n", pretty.Formatter(sqlCond))
 	fmt.Printf("param %# v\n", pretty.Formatter(param))
 }

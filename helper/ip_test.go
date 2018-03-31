@@ -1,10 +1,10 @@
 package helper
 
 import (
-	"testing"
-	"runtime"
 	"fmt"
 	"github.com/kr/pretty"
+	"runtime"
+	"testing"
 )
 
 func TestServerIP(t *testing.T) {

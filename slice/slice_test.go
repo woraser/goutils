@@ -1,10 +1,10 @@
 package slice
 
 import (
-	"testing"
 	"fmt"
-	"runtime"
 	"reflect"
+	"runtime"
+	"testing"
 )
 
 func TestToSliceIface(t *testing.T) {

@@ -6,13 +6,13 @@
 package mysql
 
 import (
-	"time"
-	"fmt"
-	"strings"
-	"database/sql"
 	"bytes"
-	"strconv"
+	"database/sql"
+	"fmt"
 	"github.com/liuyongshuai/goutils/elem"
+	"strconv"
+	"strings"
+	"time"
 )
 
 //存储MySQL的连接账号信息

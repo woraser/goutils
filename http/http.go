@@ -14,9 +14,9 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"regexp"
 	"strings"
 	"time"
-	"regexp"
 )
 
 //客户端结构体

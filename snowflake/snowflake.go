@@ -21,8 +21,8 @@
 package snowflake
 
 import (
-	"sync"
 	"fmt"
+	"sync"
 	"time"
 )
 
