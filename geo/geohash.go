@@ -90,16 +90,16 @@ func GeoHashEncode(lat, lng float64, precision int) (string, *SquareDistrict) {
 	var minLng, maxLng = MIN_LONGITUDE, MAX_LONGITUDE
 	var mid float64 = 0
 
-	bit, ch, length, isEven := 0, 0, 0, true
-	for length < precision {
-		if isEven { //偶数位和奇数位处理不一样
+	bit, ch, isEven := 0, 0, true
+	for i := 0; i < precision; i++ {
+		if isEven { //偶数位放经度
 			if mid = (minLng + maxLng) / 2; mid < lng {
 				ch |= bits[bit]
 				minLng = mid
 			} else {
 				maxLng = mid
 			}
-		} else {
+		} else { //奇数位放纬度
 			if mid = (minLat + maxLat) / 2; mid < lat {
 				ch |= bits[bit]
 				minLat = mid
@@ -112,7 +112,7 @@ func GeoHashEncode(lat, lng float64, precision int) (string, *SquareDistrict) {
 			bit++
 		} else {
 			buf.WriteByte(base32[ch])
-			length, bit, ch = length+1, 0, 0
+			bit, ch = 0, 0
 		}
 	}
 
@@ -127,8 +127,8 @@ func GeoHashDecode(geohash string) *SquareDistrict {
 	isEven := true
 	lats := [2]float64{MIN_LATITUDE, MAX_LATITUDE}
 	lngs := [2]float64{MIN_LONGITUDE, MAX_LONGITUDE}
-	for _, c := range geohash {
-		pos, ok := base32Pos[byte(c)]
+	for _, ch := range geohash {
+		pos, ok := base32Pos[byte(ch)]
 		if !ok {
 			return ret
 		}
