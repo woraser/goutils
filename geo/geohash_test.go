@@ -45,7 +45,7 @@ func TestGeoHashEncode(t *testing.T) {
 			geo, square := GeoHashEncode(pInfo.Lat, pInfo.Lng, i)
 			dist := int(square.BorderLength())
 			//附近9个格子
-			gs := GetNeighborsGeoCodes(pInfo.Lat, pInfo.Lng, i)
+			gs := GetNeighborsGeoHash(pInfo.Lat, pInfo.Lng, i)
 			dt := fmt.Sprintf("%vm x %vm", dist, dist)
 			fmt.Fprintf(os.Stdout, "\tprecision:%d\tgeoHash:%-10s\tdist:%-14s\tNeighbors:%s\n", i, geo, dt, strings.Join(gs, ","))
 		}

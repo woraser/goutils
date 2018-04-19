@@ -146,7 +146,7 @@ func GeoHashDecode(geohash string) *SquareDistrict {
 }
 
 //计算给定的经纬度点在指定精度下周围8个区域的geoHash编码，包括自身，一共9个点
-func GetNeighborsGeoCodes(lat, lng float64, precision int) []string {
+func GetNeighborsGeoHash(lat, lng float64, precision int) []string {
 	if lat < MIN_LATITUDE || lat > MAX_LATITUDE {
 		return []string{}
 	}
