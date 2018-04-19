@@ -91,7 +91,7 @@ func GeoHashEncode(lat, lng float64, precision int) (string, *SquareDistrict) {
 	var mid float64 = 0
 
 	bit, ch, isEven := 0, 0, true
-	for i := 0; i < precision; i++ {
+	for i := 0; i < precision; {
 		if isEven { //偶数位放经度
 			if mid = (minLng + maxLng) / 2; mid < lng {
 				ch |= bits[bit]
@@ -113,6 +113,7 @@ func GeoHashEncode(lat, lng float64, precision int) (string, *SquareDistrict) {
 		} else {
 			buf.WriteByte(base32[ch])
 			bit, ch = 0, 0
+			i++
 		}
 	}
 
