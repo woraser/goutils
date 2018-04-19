@@ -80,10 +80,10 @@ func (sd *SquareDistrict) BorderLength() float64 {
 */
 func GeoHashEncode(lat, lng float64, precision int) (string, *SquareDistrict) {
 	if lat < MIN_LATITUDE || lat > MAX_LATITUDE {
-		return "", &SquareDistrict{}
+		return "", nil
 	}
 	if lng < MIN_LONGITUDE || lng > MAX_LONGITUDE {
-		return "", &SquareDistrict{}
+		return "", nil
 	}
 	var buf bytes.Buffer
 	var minLat, maxLat = MIN_LATITUDE, MAX_LATITUDE
@@ -170,16 +170,48 @@ func GetNeighborsGeoHash(lat, lng float64, precision int) []string {
 	geoHashList[0] = cur
 
 	//上下左右四个格子
-	up, _ := GeoHashEncode((b.MinLat+b.MaxLat)/2+b.LatSpan(), (b.MinLng+b.MaxLng)/2, precision)
-	down, _ := GeoHashEncode((b.MinLat+b.MaxLat)/2-b.LatSpan(), (b.MinLng+b.MaxLng)/2, precision)
-	left, _ := GeoHashEncode((b.MinLat+b.MaxLat)/2, (b.MinLng+b.MaxLng)/2-b.LngSpan(), precision)
-	right, _ := GeoHashEncode((b.MinLat+b.MaxLat)/2, (b.MinLng+b.MaxLng)/2+b.LngSpan(), precision)
+	up, _ := GeoHashEncode(
+		(b.MinLat+b.MaxLat)/2+b.LatSpan(),
+		(b.MinLng+b.MaxLng)/2,
+		precision,
+	)
+	down, _ := GeoHashEncode(
+		(b.MinLat+b.MaxLat)/2-b.LatSpan(),
+		(b.MinLng+b.MaxLng)/2,
+		precision,
+	)
+	left, _ := GeoHashEncode(
+		(b.MinLat+b.MaxLat)/2,
+		(b.MinLng+b.MaxLng)/2-b.LngSpan(),
+		precision,
+	)
+	right, _ := GeoHashEncode(
+		(b.MinLat+b.MaxLat)/2,
+		(b.MinLng+b.MaxLng)/2+b.LngSpan(),
+		precision,
+	)
 
 	//四个角的格子
-	leftUp, _ := GeoHashEncode((b.MinLat+b.MaxLat)/2+b.LatSpan(), (b.MinLng+b.MaxLng)/2-b.LngSpan(), precision)
-	leftDown, _ := GeoHashEncode((b.MinLat+b.MaxLat)/2-b.LatSpan(), (b.MinLng+b.MaxLng)/2-b.LngSpan(), precision)
-	rightUp, _ := GeoHashEncode((b.MinLat+b.MaxLat)/2+b.LatSpan(), (b.MinLng+b.MaxLng)/2+b.LngSpan(), precision)
-	rightDown, _ := GeoHashEncode((b.MinLat+b.MaxLat)/2-b.LatSpan(), (b.MinLng+b.MaxLng)/2+b.LngSpan(), precision)
+	leftUp, _ := GeoHashEncode(
+		(b.MinLat+b.MaxLat)/2+b.LatSpan(),
+		(b.MinLng+b.MaxLng)/2-b.LngSpan(),
+		precision,
+	)
+	leftDown, _ := GeoHashEncode(
+		(b.MinLat+b.MaxLat)/2-b.LatSpan(),
+		(b.MinLng+b.MaxLng)/2-b.LngSpan(),
+		precision,
+	)
+	rightUp, _ := GeoHashEncode(
+		(b.MinLat+b.MaxLat)/2+b.LatSpan(),
+		(b.MinLng+b.MaxLng)/2+b.LngSpan(),
+		precision,
+	)
+	rightDown, _ := GeoHashEncode(
+		(b.MinLat+b.MaxLat)/2-b.LatSpan(),
+		(b.MinLng+b.MaxLng)/2+b.LngSpan(),
+		precision,
+	)
 
 	//八个格子赋值
 	geoHashList[1] = up
