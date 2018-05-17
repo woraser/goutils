@@ -7,7 +7,7 @@ package safemap
 
 import (
 	"fmt"
-	"github.com/liuyongshuai/goutils/elem"
+	"github.com/woraser/goutils/elem"
 	"sync"
 )
 

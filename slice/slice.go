@@ -6,7 +6,7 @@
 package slice
 
 import (
-	"github.com/liuyongshuai/goutils/elem"
+	"github.com/woraser/goutils/elem"
 	"math/rand"
 	"reflect"
 )
