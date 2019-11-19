@@ -21,12 +21,12 @@ func GetCurrentDirectory() (string,error) {
 }
 
 /*生成唯一ID*/
-func GetUUId() string {
+func GetUUId() (string, error) {
 	b := make([]byte, 48)
 	if _, err := io.ReadFull(rand.Reader, b); err != nil {
-		return ""
+		return "", err
 	}
-	return GetMd5String(base64.URLEncoding.EncodeToString(b))
+	return GetMd5String(base64.URLEncoding.EncodeToString(b)), nil
 }
 
 

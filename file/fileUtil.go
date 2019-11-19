@@ -1,38 +1,35 @@
 package file
 
 import (
-	"os"
-	"io"
-	"mime/multipart"
-	"path/filepath"
-	"bytes"
-	"net/http"
-	"fmt"
 	"bufio"
-	"io/ioutil"
+	"bytes"
 	"errors"
-	"go/ast"
+	"io"
+	"io/ioutil"
+	"mime/multipart"
+	"net/http"
+	"os"
+	"path/filepath"
 )
 
-
 /*读取文件*/
-func ReadFileForByte(filePath string) ([]byte,error) {
+func ReadFileForByte(filePath string) ([]byte, error) {
 	if CheckFileExist(filePath) == false {
-		return nil,errors.New("file is not exits")
+		return nil, errors.New("file is not exits")
 	}
 	data, err := ioutil.ReadFile(filePath)
-	return data,err
+	return data, err
 }
 
 /*逐行 读取文件*/
-func ReadFileBufferOnLine(filePath string) ([]string,error) {
+func ReadFileBufferOnLine(filePath string) ([]string, error) {
 	var content []string
 	if CheckFileExist(filePath) == false {
-		return content,errors.New("file is not exits")
+		return content, errors.New("file is not exits")
 	}
 	file, err := os.Open(filePath)
 	if err != nil {
-		return content,err
+		return content, err
 	}
 	defer file.Close()
 	bufferedReader := bufio.NewReader(file)
@@ -45,7 +42,7 @@ func ReadFileBufferOnLine(filePath string) ([]string,error) {
 		count++
 		content = append(content, line)
 	}
-	return content,nil
+	return content, nil
 }
 
 /*按照字节写入文件*/
@@ -62,7 +59,7 @@ func WriteFileBufferByString(filePath string, content string) error {
 	}
 	defer file.Close()
 	bufferedWrite := bufio.NewWriter(file)
-	_,errs := bufferedWrite.WriteString(content)
+	_, errs := bufferedWrite.WriteString(content)
 	if errs != nil {
 		return errs
 	}
@@ -119,7 +116,6 @@ func CheckFileExist(filename string) bool {
 	_, err := os.Stat(filename)
 	return err == nil || os.IsExist(err)
 }
-
 
 /*上传文件*/
 /*
