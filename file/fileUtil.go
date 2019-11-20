@@ -12,7 +12,16 @@ import (
 	"path/filepath"
 )
 
-/*读取文件*/
+func FileExists(name string) bool {
+	if _, err := os.Stat(name); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+	return true
+}
+
+// read file by byte
 func ReadFileForByte(filePath string) ([]byte, error) {
 	if CheckFileExist(filePath) == false {
 		return nil, errors.New("file is not exits")
@@ -21,7 +30,7 @@ func ReadFileForByte(filePath string) ([]byte, error) {
 	return data, err
 }
 
-/*逐行 读取文件*/
+// read file by line
 func ReadFileBufferOnLine(filePath string) ([]string, error) {
 	var content []string
 	if CheckFileExist(filePath) == false {
@@ -45,13 +54,13 @@ func ReadFileBufferOnLine(filePath string) ([]string, error) {
 	return content, nil
 }
 
-/*按照字节写入文件*/
+// write file with byte
 func WriteFileByByte(filePath string, content []byte) error {
 	err := ioutil.WriteFile(filePath, content, 0666)
 	return err
 }
 
-/*按照字符串写入文件*/
+// write file with string
 func WriteFileBufferByString(filePath string, content string) error {
 	file, err := os.OpenFile(filePath, os.O_WRONLY, 0666)
 	if err != nil {

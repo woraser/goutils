@@ -12,7 +12,7 @@ import (
 	"strconv"
 )
 
-//提取本机的IP地址
+// get local ip address
 func LocalIP() (ips []string) {
 	addrs, err := net.InterfaceAddrs()
 	if err != nil {
@@ -28,7 +28,7 @@ func LocalIP() (ips []string) {
 	return
 }
 
-//判断是否为内网
+// check ip is private?
 func IsPrivateIP(ip string) bool {
 	longip := Ip2long(ip)
 	//10.0.0.0-10.255.255.255
@@ -46,7 +46,7 @@ func IsPrivateIP(ip string) bool {
 	return false
 }
 
-//IP地址由字符串转为uint32
+// convert ip from string to uint2
 func Ip2long(ipstr string) (ip uint32) {
 	r := `^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})`
 	reg, err := regexp.Compile(r)
@@ -71,7 +71,7 @@ func Ip2long(ipstr string) (ip uint32) {
 	return
 }
 
-//IP地址转为字符串
+// convert ip from uint32 to string
 func Long2ip(ip uint32) string {
 	return fmt.Sprintf("%d.%d.%d.%d", ip>>24, ip<<8>>24, ip<<16>>24, ip<<24>>24)
 }

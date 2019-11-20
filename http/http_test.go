@@ -14,14 +14,14 @@ func TestToFuHttp(t *testing.T) {
 	size := 20
 	ch := make(chan int, size)
 	for i := 0; i < size; i++ {
-		go fortest(ch)
+		go Fortest(ch)
 	}
 	for i := 0; i < size; i++ {
 		<-ch
 	}
 }
 
-func fortest(ch chan int) {
+func Fortest(ch chan int) {
 	client := NewHttpClient().
 		SetUrl(testUrl).
 		SetUserAgent(ua).
@@ -30,7 +30,9 @@ func fortest(ch chan int) {
 		SetRawCookie(rawCookie).
 		AddHeader("X-Requested-With", "XMLHttpRequest").
 		AddHeader("Connection", "keep-alive")
-	ret, err := client.Get()
-	fmt.Println(err, ret.GetBodyString())
+	_, err :=client.Get()
+	if err != nil {
+		fmt.Println("err:", err)
+	}
 	ch <- 1
 }

@@ -4,6 +4,6 @@ const (
 	CONFIG_PATH = ""
 )
 
-func LoadConfigA(){
+func LoadConfigA() {
 
 }

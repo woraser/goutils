@@ -24,7 +24,7 @@ func init() {
 var alphaNum = []byte(`0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz`)
 
 /**
-生成随机字符串的字节切片。n为串的长度，alphabets为随机串的指定范围
+    random generate str
 	a :=RandomCreateBytes(16)
 	fmt.Println(a)
 */
@@ -48,7 +48,6 @@ func RandomStr(n int, alphabets ...byte) string {
 	return string(byteSlice)
 }
 
-//截取字符串
 func Substr(str string, start int, end int) string {
 	rs := []rune(str)
 	length := len(rs)
@@ -68,7 +67,6 @@ func Substr(str string, start int, end int) string {
 	return string(rs[start:end])
 }
 
-//md5转换
 func MD5(str string) string {
 	data := []byte(str)
 	has := md5.Sum(data)
@@ -83,7 +81,6 @@ var base62CharToInt = []string{
 	"N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}
 var base62IntToChar = make(map[string]int)
 
-//base62转换
 func Base62Encode(num int64) string {
 	baseStr := ""
 	for {
@@ -97,7 +94,6 @@ func Base62Encode(num int64) string {
 	return baseStr
 }
 
-//base62解码
 func Base62Decode(b62Str string) int64 {
 	var rs int64 = 0
 	for i := 0; i < len(b62Str); i++ {
