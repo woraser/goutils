@@ -1,6 +1,9 @@
 # goutils
 断断续续开发的一些golang的工具类，主要包括：
 
+## algorithm
+Common algorithm,contain sort and search
+
 ## elem
 golang里基本类型数据的转换操作。试图传入一个任意类型的数据，然后提供一些判断、转换成任意类型的数据。详见相关的测试代码。
 试图在诸如提取数据库字段、获取请求参数时只返回这样的类型，然后再做自由的类型转换。

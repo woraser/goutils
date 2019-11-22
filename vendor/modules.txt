@@ -1,8 +1,17 @@
+# github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
+github.com/alecthomas/template
+github.com/alecthomas/template/parse
+# github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d
+github.com/alecthomas/units
 # github.com/go-sql-driver/mysql v1.4.1
 github.com/go-sql-driver/mysql
 # github.com/kr/pretty v0.1.0
 github.com/kr/pretty
 # github.com/kr/text v0.1.0
 github.com/kr/text
+# github.com/pkg/errors v0.8.1
+github.com/pkg/errors
 # google.golang.org/appengine v1.6.5
 google.golang.org/appengine/cloudsql
+# gopkg.in/alecthomas/kingpin.v2 v2.2.6
+gopkg.in/alecthomas/kingpin.v2

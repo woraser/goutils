@@ -12,7 +12,7 @@ func (a IntSlick) quickSort(lo, hi int) {
 }
 
 func (a IntSlick) partition(lo, hi int) int {
-	pivot := getMiddleValue(a[lo],a[hi/2],a[hi])
+	pivot := a[hi]
 	i := lo -1
 	for j := lo; j < hi ; j++ {
 		if a[j] < pivot {
@@ -22,17 +22,4 @@ func (a IntSlick) partition(lo, hi int) int {
 	}
 	a[i+1] ,a[hi] = a[hi], a[i+1]
 	return i + 1
-}
-
-
-
-
-func getMiddleValue(a, b, c int) int{
-	if a < b && b < c {
-		return b
-	}
-	if a < c && c < b {
-		return c
-	}
-	return b
 }
